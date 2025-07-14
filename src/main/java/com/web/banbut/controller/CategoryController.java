@@ -5,6 +5,7 @@ import com.web.banbut.dto.request.CategoryUpdateRequest;
 import com.web.banbut.dto.response.ApiResponse;
 import com.web.banbut.dto.response.CategoryCreationResponse;
 import com.web.banbut.service.CategoryService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -18,6 +19,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add-category")
     public ApiResponse<Map<String, Object>> createCategory(@RequestBody CategoryCreationRequest categoryCreationRequest) {
         return new ApiResponse<>(
@@ -28,6 +30,7 @@ public class CategoryController {
         );
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update")
     public ApiResponse<Map<String, Object>> updateCategory(@RequestBody CategoryUpdateRequest categoryUpdateRequest) {
         return new ApiResponse<>(
@@ -38,6 +41,7 @@ public class CategoryController {
         );
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("get-list")
     public ApiResponse<Map<String, Object>> getListCategories() {
         return new ApiResponse<>(
@@ -48,6 +52,7 @@ public class CategoryController {
         );
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{categoryId}")
     public ApiResponse<Map<String, Object>> deleteCategory(@PathVariable String categoryId) {
         categoryService.deleteCategory(categoryId);

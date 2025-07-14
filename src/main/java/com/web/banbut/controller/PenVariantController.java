@@ -5,6 +5,7 @@ import com.web.banbut.dto.request.PenVariantUpdateRequest;
 import com.web.banbut.dto.response.ApiResponse;
 import com.web.banbut.service.PenService;
 import com.web.banbut.service.PenVariantService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -18,6 +19,7 @@ public class PenVariantController {
         this.penVariantService = penVariantService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add-variant")
     public ApiResponse<Map<String, Object>> createVariant(@RequestBody PenVariantCreationRequest penVariantCreationRequest) {
         return new ApiResponse<>(
@@ -40,6 +42,7 @@ public class PenVariantController {
         );
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin/{penId}")
     public ApiResponse<Map<String, Object>> adminGetListPenVariantByPenId(@PathVariable String penId) {
         return new ApiResponse<>(
@@ -51,6 +54,7 @@ public class PenVariantController {
         );
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/admin/{penVariantId}/{isVisible}")
     public ApiResponse<Map<String, Object>> setVisible(@PathVariable String penVariantId, @PathVariable boolean isVisible) {
         penVariantService.setVisible(penVariantId, isVisible);
@@ -62,6 +66,7 @@ public class PenVariantController {
         );
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/admin/update/{penVariantId}")
     public ApiResponse<Map<String, Object>> updatePenVariant(@PathVariable String penVariantId, @RequestBody PenVariantUpdateRequest penVariantUpdateRequest) {
         return new ApiResponse<>(

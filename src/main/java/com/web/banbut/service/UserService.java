@@ -7,6 +7,8 @@ import com.web.banbut.entity.User;
 import com.web.banbut.exception.AppException;
 import com.web.banbut.exception.ErrorCode;
 import com.web.banbut.repository.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,14 +28,14 @@ public class UserService {
     public AuthenticationResponse register(UserCreationRequest userCreationRequest) {
         if (userRepository.existsByUsername(userCreationRequest.getUsername()))
             throw new AppException(ErrorCode.USERNAME_EXISTED);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         User user = new User(
                 userCreationRequest.getUsername(),
-                userCreationRequest.getPassword(),
+                passwordEncoder.encode(userCreationRequest.getPassword()),
                 userCreationRequest.getEmail()
         );
         userRepository.save(user);
         cartService.createCart(user);
         return authenticationService.logIn(new AuthenticationRequest(userCreationRequest.getUsername(), userCreationRequest.getPassword()));
     }
-
 }

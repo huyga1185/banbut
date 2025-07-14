@@ -24,8 +24,8 @@ public class ImageService {
         this.imageRepository = imageRepository;
     }
 
-    public ImageResponse getImage(String imageId) {
-        Image image = imageRepository.findById(imageId).orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
+    public ImageResponse getImage(String name) {
+        Image image = imageRepository.findByName(name).orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
         FileResponse fileResponse = fileStorageService.buildFileResponseFromStoredFile(image.getName());
         return new ImageResponse(
                 image.getImageId(),
@@ -37,6 +37,8 @@ public class ImageService {
     public ImageUploadResponse uploadImage(String penId, MultipartFile file) {
         String fileName = file.getOriginalFilename();
         Pen pen = penRepository.findById(penId).orElseThrow(() -> new AppException(ErrorCode.PEN_NOT_FOUND));
+        if (imageRepository.existsByName(fileName))
+            throw new AppException(ErrorCode.IMAGE_EXISTED);
         Image image = new Image(fileName, pen);
         image = imageRepository.save(image);
         fileStorageService.save(file);

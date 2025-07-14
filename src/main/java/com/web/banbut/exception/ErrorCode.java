@@ -27,6 +27,10 @@ public enum ErrorCode {
     FILE_DOES_NOT_EXISTS(3507, "File does not exists"),
     COULD_NOT_DELETE_THE_FILE(3508, "Could not delete the file"),
     IMAGE_NOT_FOUND(3509, "Image not found"),
+    IMAGE_EXISTED(3510, "Image existed"),
+    AUTH_TOKEN_SIGN_FAILED(4000, "Auth token sign failed"),
+    COULD_NOT_VERIFY_TOKEN(4001, "Could not verify token"),
+    COULD_NOT_PARSE_TOKEN(4002, "Could not parse token"),
     COULD_NOT_RESET_UPLOAD_FOLDER(9001,"Could not reset upload folder"),
     UNKNOWN_ERROR(9999, "Unknown error");
     private int code;

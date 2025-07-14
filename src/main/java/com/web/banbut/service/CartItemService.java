@@ -5,6 +5,7 @@ import com.web.banbut.entity.CartItem;
 import com.web.banbut.exception.AppException;
 import com.web.banbut.exception.ErrorCode;
 import com.web.banbut.repository.CartItemRepository;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,7 +20,9 @@ public class CartItemService {
     }
 
     //wait
-    public CartItemResponse addCartItem() {
+    public CartItemResponse addCartItem(Authentication authentication) {
+        String username = authentication.name();
+
         return null;
     }
 

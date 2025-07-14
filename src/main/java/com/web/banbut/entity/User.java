@@ -17,6 +17,8 @@ public class User {
 
     private String email;
 
+    private String role;
+
     private String password;
 
     @Column(name = "created_at")
@@ -41,6 +43,7 @@ public class User {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.role = "USER";
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
@@ -94,6 +97,22 @@ public class User {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Set<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
     }
 
     public String getEmail() {

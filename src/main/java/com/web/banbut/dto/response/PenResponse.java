@@ -1,9 +1,11 @@
 package com.web.banbut.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PenResponse {
     @JsonProperty("pen_id")
     private String penId;

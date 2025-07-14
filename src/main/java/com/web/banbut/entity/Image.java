@@ -11,6 +11,7 @@ public class Image {
     @Column(name = "image_id")
     private String imageId;
 
+    @Column(unique = true)
     private String name;
 
     @ManyToOne
