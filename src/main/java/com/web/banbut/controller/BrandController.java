@@ -19,7 +19,7 @@ public class BrandController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("add-brand")
+    @PostMapping("/add-brand")
     public ApiResponse<Map<String, Object>> createBrand(@RequestBody BrandCreationRequest brandCreationRequest) {
         return new ApiResponse<>(
                 "success",
