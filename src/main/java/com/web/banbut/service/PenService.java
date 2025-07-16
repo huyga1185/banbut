@@ -98,7 +98,7 @@ public class PenService {
                 () -> new AppException(ErrorCode.PEN_NOT_FOUND)
         );
         pen.setVisible(isVisible);
-        penVariantRepository.disableAllByPenId(penId);
+//        penVariantRepository.disableAllByPenId(penId);
         penRepository.save(pen);
     }
 

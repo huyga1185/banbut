@@ -2,6 +2,8 @@ package com.web.banbut.controller;
 
 import com.web.banbut.dto.response.ApiResponse;
 import com.web.banbut.service.ImageService;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,14 +19,9 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    @GetMapping("/{name}")
-    public ApiResponse<Map<String, Object>> getImage(@PathVariable String name) {
-        return new ApiResponse<>(
-                "success",
-                Map.of(
-                        "image", imageService.getImage(name)
-                )
-        );
+    @GetMapping(value = "/{name}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<byte[]> getImageFile(@PathVariable String name) {
+        return imageService.getImageFile(name);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

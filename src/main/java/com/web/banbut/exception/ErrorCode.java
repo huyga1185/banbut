@@ -32,7 +32,10 @@ public enum ErrorCode {
     COULD_NOT_VERIFY_TOKEN(4001, "Could not verify token"),
     COULD_NOT_PARSE_TOKEN(4002, "Could not parse token"),
     COULD_NOT_RESET_UPLOAD_FOLDER(9001,"Could not reset upload folder"),
-    UNKNOWN_ERROR(9999, "Unknown error");
+    UNKNOWN_ERROR(9999, "Unknown error"),
+    CART_NOT_FOUND(3003, "Cart not found"),
+    INSUFFICIENT_STOCK(2003, "Insufficient stock"),
+    INVALID_QUANTITY(2004, "Invalid quantity");
     private int code;
 
     private String message;

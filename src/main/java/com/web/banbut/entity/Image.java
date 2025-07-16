@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "image")
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

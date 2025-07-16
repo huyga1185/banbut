@@ -12,14 +12,25 @@ public class CartItemResponse {
     private int quantity;
     @JsonProperty("total_price")
     private double totalPrice;
+    @JsonProperty("image_url")
+    private String imageUrl;
 
-    public CartItemResponse(String cartItemId, String cartId, String name, double price, int quantity, double totalPrice) {
+    public CartItemResponse(String cartItemId, String cartId, String name, double price, int quantity, double totalPrice, String imageUrl) {
         this.cartItemId = cartItemId;
         this.cartId = cartId;
         this.name = name;
         this.price = price;
         this.quantity = quantity;
         this.totalPrice = totalPrice;
+        this.imageUrl = imageUrl;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getCartItemId() {

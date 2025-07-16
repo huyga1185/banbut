@@ -9,8 +9,15 @@ import com.web.banbut.exception.AppException;
 import com.web.banbut.exception.ErrorCode;
 import com.web.banbut.repository.ImageRepository;
 import com.web.banbut.repository.PenRepository;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service
 public class ImageService {
@@ -24,15 +31,28 @@ public class ImageService {
         this.imageRepository = imageRepository;
     }
 
-    public ImageResponse getImage(String name) {
-        Image image = imageRepository.findByName(name).orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
-        FileResponse fileResponse = fileStorageService.buildFileResponseFromStoredFile(image.getName());
-        return new ImageResponse(
-                image.getImageId(),
-                fileResponse,
-                image.getCreatedAt()
-        );
+    public ResponseEntity<byte[]> getImageFile(String name) {
+        Image image = imageRepository.findByName(name)
+                .orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
+
+        Path imagePath = Paths.get("uploads", image.getName());
+
+        try {
+            byte[] imageBytes = Files.readAllBytes(imagePath);
+
+            // Optional: tự xác định định dạng ảnh
+            String contentType = Files.probeContentType(imagePath);
+
+            return ResponseEntity
+                    .ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .body(imageBytes);
+
+        } catch (IOException e) {
+            throw new AppException(ErrorCode.FILE_DOES_NOT_EXISTS);
+        }
     }
+
 
     public ImageUploadResponse uploadImage(String penId, MultipartFile file) {
         String fileName = file.getOriginalFilename();

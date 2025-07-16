@@ -5,6 +5,7 @@ import com.web.banbut.dto.request.PenUpdateRequest;
 import com.web.banbut.dto.response.ApiResponse;
 import com.web.banbut.service.PenService;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -26,6 +27,7 @@ public class PenController {
         ));
     }
 
+    @Transactional
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/update-pen/{penId}")
     public ApiResponse<Map<String, Object>> updatePen(@PathVariable String penId, @RequestBody PenUpdateRequest penUpdateRequest) {
@@ -37,6 +39,7 @@ public class PenController {
         );
     }
 
+    @Transactional
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/set-visible/{penId}/{isVisible}")
     public ApiResponse<Map<String, String>> setVisible(@PathVariable String penId, @PathVariable boolean isVisible) {
