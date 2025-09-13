@@ -13,7 +13,14 @@ public class CartItemResponse {
     @JsonProperty("total_price")
     private double totalPrice;
 
-    public CartItemResponse(String cartItemId, String cartId, String name, double price, int quantity, double totalPrice) {
+    public CartItemResponse(
+        String cartItemId, 
+        String cartId, 
+        String name, 
+        double price, 
+        int quantity, 
+        double totalPrice
+    ) {
         this.cartItemId = cartItemId;
         this.cartId = cartId;
         this.name = name;

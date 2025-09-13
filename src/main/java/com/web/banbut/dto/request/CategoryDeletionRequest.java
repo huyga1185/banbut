@@ -1,7 +1,7 @@
 package com.web.banbut.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+// import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 public class CategoryDeletionRequest {
     @JsonProperty("category_id")

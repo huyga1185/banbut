@@ -15,6 +15,8 @@ public enum ErrorCode {
     CATEGORY_NAME_EXISTED(2753, "Category name existed"),
     CATEGORY_HAS_PRODUCTS(2754, "Category has products"),
     CART_EXISTED(3001, "Cart existed"),
+    CART_NOT_FOUND(3004, "Cart not found"),
+    OUT_OF_STOCK(3005, "Out of stock"),
     CART_ITEM_NOT_FOUND(3002,  "Cart item not found"),
     COULD_NOT_DELETE_CART_ITEM(3003, "Could not delete cart item"),
     COULD_NOT_CREATE_FOLDER(3500, "Could not initialize folder for upload"),
@@ -32,6 +34,7 @@ public enum ErrorCode {
     COULD_NOT_VERIFY_TOKEN(4001, "Could not verify token"),
     COULD_NOT_PARSE_TOKEN(4002, "Could not parse token"),
     COULD_NOT_RESET_UPLOAD_FOLDER(9001,"Could not reset upload folder"),
+    LACK_OF_REQUEST_BODY(9500, "Lack of request body"),
     UNKNOWN_ERROR(9999, "Unknown error");
     private int code;
 

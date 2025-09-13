@@ -13,7 +13,7 @@ import com.web.banbut.entity.User;
 import com.web.banbut.exception.AppException;
 import com.web.banbut.exception.ErrorCode;
 import com.web.banbut.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;

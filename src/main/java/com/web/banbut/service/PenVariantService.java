@@ -2,7 +2,6 @@ package com.web.banbut.service;
 
 import com.web.banbut.dto.request.PenVariantCreationRequest;
 import com.web.banbut.dto.request.PenVariantUpdateRequest;
-import com.web.banbut.dto.response.PenResponse;
 import com.web.banbut.dto.response.PenVariantCreationResponse;
 import com.web.banbut.dto.response.PenVariantResponse;
 import com.web.banbut.entity.Pen;

@@ -3,7 +3,7 @@ package com.web.banbut.dto.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CategoryUpdateRequest {
-    @JsonProperty("brand_id")
+    @JsonProperty("category_id")
     private String categoryId;
     private String name;
 

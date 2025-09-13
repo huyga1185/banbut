@@ -3,7 +3,7 @@ package com.web.banbut.controller;
 import com.web.banbut.dto.request.PenVariantCreationRequest;
 import com.web.banbut.dto.request.PenVariantUpdateRequest;
 import com.web.banbut.dto.response.ApiResponse;
-import com.web.banbut.service.PenService;
+// import com.web.banbut.service.PenService;
 import com.web.banbut.service.PenVariantService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

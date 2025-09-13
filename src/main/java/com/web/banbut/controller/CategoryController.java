@@ -3,7 +3,7 @@ package com.web.banbut.controller;
 import com.web.banbut.dto.request.CategoryCreationRequest;
 import com.web.banbut.dto.request.CategoryUpdateRequest;
 import com.web.banbut.dto.response.ApiResponse;
-import com.web.banbut.dto.response.CategoryCreationResponse;
+// import com.web.banbut.dto.response.CategoryCreationResponse;
 import com.web.banbut.service.CategoryService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

@@ -1,6 +1,6 @@
 package com.web.banbut.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+// import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PenVariantUpdateRequest {
     private String color;

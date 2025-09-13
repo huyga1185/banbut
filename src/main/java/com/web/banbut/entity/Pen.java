@@ -1,7 +1,6 @@
 package com.web.banbut.entity;
 
 import jakarta.persistence.*;
-import org.checkerframework.checker.units.qual.C;
 
 import java.time.LocalDateTime;
 import java.util.Set;

@@ -32,4 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 
+### linux bash ###
+run.sh
+
 /src/main/resources/application.properties
