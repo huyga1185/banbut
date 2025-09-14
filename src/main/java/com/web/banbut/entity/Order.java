@@ -19,9 +19,6 @@ public class Order {
     private double totalPrice;
 
     @Column(nullable = false)
-    private String address;
-
-    @Column(nullable = false)
     private String status;
 
     @ManyToOne
@@ -32,6 +29,10 @@ public class Order {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "address_id", nullable = false)
+    private Address address;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -40,27 +41,27 @@ public class Order {
 
     public Order() {}
 
-    public Order(String orderId, User user, Pen pen, String status, String address, double totalPrice, int quantity, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Order(String orderId, User user, Pen pen, String status, double totalPrice, int quantity, LocalDateTime createdAt, LocalDateTime updatedAt, Address address) {
         this.orderId = orderId;
         this.user = user;
         this.pen = pen;
         this.status = status;
-        this.address = address;
         this.totalPrice = totalPrice;
         this.quantity = quantity;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.address = address;
     }
 
-    public Order(User user, Pen pen, String status, String address, int quantity, double totalPrice) {
+    public Order(User user, Pen pen, String status, int quantity, double totalPrice, Address address) {
         this.user = user;
         this.pen = pen;
         this.status = status;
-        this.address = address;
         this.quantity = quantity;
         this.totalPrice = totalPrice;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+        this.address = address;
     }
 
     public void setOrderId(String orderId) {
@@ -83,10 +84,6 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
@@ -101,10 +98,6 @@ public class Order {
 
     public String getOrderId() {
         return orderId;
-    }
-
-    public String getAddress() {
-        return address;
     }
 
     public String getStatus() {
@@ -133,5 +126,13 @@ public class Order {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }
