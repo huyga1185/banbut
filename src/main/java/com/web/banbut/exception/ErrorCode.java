@@ -6,6 +6,7 @@ public enum ErrorCode {
     PASSWORD_DOES_NOT_MATCH(1003,  "Password does not match"),
     PEN_NOT_FOUND(2001, "Pen not found"),
     PEN_VARIANT_NOT_FOUND(2002, "Pen variant not found"),
+    ORDER_STATUS_INVALID(2250, "Order status invalid"),
     BRAND_NOT_FOUND(2501, "Brand not found"),
     BRAND_EXISTED(2502, "Brand existed"),
     BRAND_NAME_EXISTED(2503,  "Brand name existed"),

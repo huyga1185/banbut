@@ -39,9 +39,22 @@ public class Order {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    private String note;
+
     public Order() {}
 
-    public Order(String orderId, User user, Pen pen, String status, double totalPrice, int quantity, LocalDateTime createdAt, LocalDateTime updatedAt, Address address) {
+    public Order(
+        String orderId, 
+        User user, 
+        Pen pen, 
+        String status, 
+        double totalPrice, 
+        int quantity, 
+        LocalDateTime createdAt, 
+        LocalDateTime updatedAt, 
+        Address address,
+        String note
+    ) {
         this.orderId = orderId;
         this.user = user;
         this.pen = pen;
@@ -51,9 +64,18 @@ public class Order {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.address = address;
+        this.note = note;
     }
 
-    public Order(User user, Pen pen, String status, int quantity, double totalPrice, Address address) {
+    public Order(
+        User user, 
+        Pen pen, 
+        String status, 
+        int quantity, 
+        double totalPrice, 
+        Address address,
+        String note
+    ) {
         this.user = user;
         this.pen = pen;
         this.status = status;
@@ -62,6 +84,7 @@ public class Order {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         this.address = address;
+        this.note = note;
     }
 
     public void setOrderId(String orderId) {
@@ -134,5 +157,13 @@ public class Order {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }
