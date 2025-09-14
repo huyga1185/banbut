@@ -32,7 +32,8 @@ public class PenVariantService {
                 penVariantCreationRequest.getQuantity(),
                 penVariantCreationRequest.getPrice(),
                 penVariantCreationRequest.getTip(),
-                pen
+                pen,
+                0
         ));
         return new PenVariantCreationResponse(
                 newPenVariant.getPenVariantId(),

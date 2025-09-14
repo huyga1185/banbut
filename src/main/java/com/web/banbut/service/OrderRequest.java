@@ -3,32 +3,37 @@ package com.web.banbut.service;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class OrderRequest {
-    @JsonProperty("pen_id")
-    private String penId;
+    @JsonProperty("pen_variant_id")
+    private String penVariantId;
     @JsonProperty("address_id")
     private String addressID;
     private String note;
-    private String status;
     private int quantity;
-    private double total_price;
 
     public OrderRequest() {}
 
-    public OrderRequest(String penId, String addressID, String note, String status, int quantity, double total_price) {
-        this.penId = penId;
+    public OrderRequest(
+            String penVariantId,
+            String addressID,
+            String note,
+            int quantity
+    ) {
+        this.penVariantId = penVariantId;
         this.addressID = addressID;
         this.note = note;
-        this.status = status;
         this.quantity = quantity;
-        this.total_price = total_price;
     }
 
-    public String getPenId() {
-        return penId;
+    public void setPenVariantId(String penVariantId) {
+        this.penVariantId = penVariantId;
     }
 
-    public void setPenId(String penId) {
-        this.penId = penId;
+    public String getPenVariantId() {
+        return penVariantId;
+    }
+
+    public void setPenId(String penVariantId) {
+        this.penVariantId = penVariantId;
     }
 
     public String getAddressID() {
@@ -47,14 +52,6 @@ public class OrderRequest {
         this.note = note;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public int getQuantity() {
         return quantity;
     }
@@ -63,11 +60,4 @@ public class OrderRequest {
         this.quantity = quantity;
     }
 
-    public double getTotal_price() {
-        return total_price;
-    }
-
-    public void setTotal_price(double total_price) {
-        this.total_price = total_price;
-    }
 }

@@ -20,7 +20,7 @@ public class BanbutApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		fileStorageService.resetStorage();//This method makes the storage reset. should be deleted when we want to hold back the data in storage for re-run.
+//		fileStorageService.resetStorage();//This method makes the storage reset. should be deleted when we want to hold back the data in storage when re-run.
 		fileStorageService.init();//This method creates a new directory for upload
 	}
 }

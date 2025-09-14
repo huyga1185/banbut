@@ -22,9 +22,6 @@ public class Pen {
     @OneToMany(mappedBy = "pen", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Image> images;
 
-    @OneToMany(mappedBy = "pen")
-    private Set<Order> orders;
-
     @ManyToOne
     @JoinColumn(name = "brand_id", nullable = false)
     private Brand brand;
@@ -51,13 +48,22 @@ public class Pen {
         this.visible = true;
     }
 
-    public Pen(String penId, LocalDateTime updatedAt, Category category, LocalDateTime createdAt, Brand brand, Set<Order> orders, Set<Image> images, Set<PenVariant> penVariants, String name, boolean visible) {
+    public Pen(
+            String penId,
+            LocalDateTime updatedAt,
+            Category category,
+            LocalDateTime createdAt,
+            Brand brand,
+            Set<Image> images,
+            Set<PenVariant> penVariants,
+            String name,
+            boolean visible
+    ) {
         this.penId = penId;
         this.updatedAt = updatedAt;
         this.category = category;
         this.createdAt = createdAt;
         this.brand = brand;
-        this.orders = orders;
         this.images = images;
         this.penVariants = penVariants;
         this.name = name;
@@ -110,14 +116,6 @@ public class Pen {
 
     public void setBrand(Brand brand) {
         this.brand = brand;
-    }
-
-    public Set<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(Set<Order> orders) {
-        this.orders = orders;
     }
 
     public Set<Image> getImages() {

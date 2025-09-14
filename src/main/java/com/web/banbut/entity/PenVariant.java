@@ -13,15 +13,26 @@ public class PenVariant {
     @JsonProperty("pen_variant_id")
     private String penVariantId;
 
+    @Column(nullable = false)
     private String color;
 
+    @Column(nullable = false)
     private int quantity;
 
+    @Column(name = "reversed_quantity", nullable = false)
+    private int reversedQuantity;
+
+    @Column(nullable = false)
     private double price;
 
+    @Column(nullable = false)
     private String tip;
 
+    @Column(nullable = false)
     private boolean visible;
+
+    @OneToMany(mappedBy = "penVariant")
+    private Set<Order> orders;
 
     @ManyToOne
     @JoinColumn(name = "pen_id", nullable = false)
@@ -39,7 +50,15 @@ public class PenVariant {
     public PenVariant() {
     }
 
-    public PenVariant(String color, int quantity, double price, String tip, Pen pen) {
+    public PenVariant(
+            String color,
+            int quantity,
+            double price,
+            String tip,
+            Pen pen,
+            Set<Order> orders,
+            int reversedQuantity
+    ) {
         this.color = color;
         this.quantity = quantity;
         this.price = price;
@@ -48,6 +67,51 @@ public class PenVariant {
         this.visible = true;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+        this.orders = orders;
+        this.reversedQuantity = reversedQuantity;
+    }
+
+    public PenVariant(
+            String color,
+            int quantity,
+            double price,
+            String tip,
+            Pen pen,
+            int reversedQuantity
+    ) {
+        this.color = color;
+        this.quantity = quantity;
+        this.price = price;
+        this.tip = tip;
+        this.pen = pen;
+        this.visible = true;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        this.reversedQuantity = reversedQuantity;
+    }
+
+    public int getReversedQuantity() {
+        return reversedQuantity;
+    }
+
+    public void setReversedQuantity(int reversedQuantity) {
+        this.reversedQuantity = reversedQuantity;
+    }
+
+    public Set<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
+    }
+
+    public Set<CartItem> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(Set<CartItem> cartItems) {
+        this.cartItems = cartItems;
     }
 
     public PenVariant(String penVariantId, String color, int quantity, double price, String tip, Pen pen, LocalDateTime createdAt, LocalDateTime updatedAt, boolean visible) {

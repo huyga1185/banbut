@@ -35,4 +35,7 @@ build/
 ### linux bash ###
 run.sh
 
+### windows bat ###
+run.bat
+
 /src/main/resources/application.properties

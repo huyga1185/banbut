@@ -23,7 +23,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "pen_id", nullable = false)
-    private Pen pen;
+    private PenVariant penVariant;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -46,7 +46,7 @@ public class Order {
     public Order(
         String orderId, 
         User user, 
-        Pen pen, 
+        PenVariant penVariant,
         String status, 
         double totalPrice, 
         int quantity, 
@@ -57,7 +57,7 @@ public class Order {
     ) {
         this.orderId = orderId;
         this.user = user;
-        this.pen = pen;
+        this.penVariant = penVariant;
         this.status = status;
         this.totalPrice = totalPrice;
         this.quantity = quantity;
@@ -68,8 +68,8 @@ public class Order {
     }
 
     public Order(
-        User user, 
-        Pen pen, 
+        User user,
+        PenVariant penVariant,
         String status, 
         int quantity, 
         double totalPrice, 
@@ -77,7 +77,7 @@ public class Order {
         String note
     ) {
         this.user = user;
-        this.pen = pen;
+        this.penVariant = penVariant;
         this.status = status;
         this.quantity = quantity;
         this.totalPrice = totalPrice;
@@ -87,12 +87,16 @@ public class Order {
         this.note = note;
     }
 
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
+    public PenVariant getPenVariant() {
+        return penVariant;
     }
 
-    public void setPen(Pen pen) {
-        this.pen = pen;
+    public void setPenVariant(PenVariant penVariant) {
+        this.penVariant = penVariant;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     public void setUser(User user) {
@@ -125,10 +129,6 @@ public class Order {
 
     public String getStatus() {
         return status;
-    }
-
-    public Pen getPen() {
-        return pen;
     }
 
     public User getUser() {

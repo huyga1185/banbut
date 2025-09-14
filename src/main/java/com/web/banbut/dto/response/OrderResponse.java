@@ -3,8 +3,10 @@ package com.web.banbut.dto.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class OrderResponse {
-    @JsonProperty("pen_id")
-    private String penId;
+    @JsonProperty("order_id")
+    private String orderId;
+    @JsonProperty("pen_variant_id")
+    private String penVariantId;
     @JsonProperty("address_id")
     private String addressID;
     private String note;
@@ -14,8 +16,17 @@ public class OrderResponse {
 
     public OrderResponse() {}
 
-    public OrderResponse(String penId, String addressID, String note, String status, int quantity, double total_price) {
-        this.penId = penId;
+    public OrderResponse(
+            String orderId,
+            String penVariantId,
+            String addressID,
+            String note,
+            String status,
+            int quantity,
+            double total_price
+    ) {
+        this.orderId = orderId;
+        this.penVariantId = penVariantId;
         this.addressID = addressID;
         this.note = note;
         this.status = status;
@@ -23,12 +34,20 @@ public class OrderResponse {
         this.total_price = total_price;
     }
 
-    public String getPenId() {
-        return penId;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public void setPenId(String penId) {
-        this.penId = penId;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getPenVariantId() {
+        return penVariantId;
+    }
+
+    public void setPenVariantId(String penVariantId) {
+        this.penVariantId = penVariantId;
     }
 
     public String getAddressID() {
