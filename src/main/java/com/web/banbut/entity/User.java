@@ -12,13 +12,16 @@ public class User {
     @Column(name = "user_id")
     private String userId;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String username;
 
+    @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String role;
 
+    @Column(nullable = false)
     private String password;
 
     @Column(name = "created_at")

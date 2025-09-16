@@ -19,8 +19,8 @@ import com.web.banbut.repository.UserRepository;
 
 @Service
 public class AddressService {
-    private AddressRepository addressRepository;
-    private UserRepository userRepository;
+    private final AddressRepository addressRepository;
+    private final UserRepository userRepository;
 
     public AddressService(
         AddressRepository addressRepository,

@@ -7,9 +7,12 @@ import com.web.banbut.entity.User;
 import com.web.banbut.exception.AppException;
 import com.web.banbut.exception.ErrorCode;
 import com.web.banbut.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.security.SecureRandom;
 
 @Service
 public class UserService {
@@ -37,5 +40,20 @@ public class UserService {
         userRepository.save(user);
         cartService.createCart(user);
         return authenticationService.logIn(new AuthenticationRequest(userCreationRequest.getUsername(), userCreationRequest.getPassword()));
+    }
+
+    @Transactional
+    public void resetPassword(String email, String newPassword) {
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_FOUND)
+            );
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        try {
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.COULD_NOT_RESET_PASSWORD);
+        }
     }
 }

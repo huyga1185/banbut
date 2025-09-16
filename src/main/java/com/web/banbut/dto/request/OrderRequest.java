@@ -1,4 +1,4 @@
-package com.web.banbut.service;
+package com.web.banbut.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

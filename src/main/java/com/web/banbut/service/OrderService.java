@@ -1,9 +1,9 @@
 package com.web.banbut.service;
 
+import com.web.banbut.dto.request.OrderRequest;
 import com.web.banbut.entity.*;
 import com.web.banbut.repository.AddressRepository;
 import com.web.banbut.repository.PenVariantRepository;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,8 @@ import com.web.banbut.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class OrderService {
@@ -200,4 +202,97 @@ public class OrderService {
         );
     }
 
+    @Transactional
+    public OrderResponse completeOrder(String orderId) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(
+                () -> new AppException(ErrorCode.ORDER_NOT_FOUND)
+            );
+        if (!order.getStatus().equals("Accepted"))
+            throw new AppException(ErrorCode.COULD_NOT_COMPLETE_ORDER);
+        order.setStatus("Completed");
+        order.setUpdatedAt(LocalDateTime.now());
+        try {
+            order = orderRepository.save(order);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.COULD_NOT_COMPLETE_ORDER);
+        }
+        return new OrderResponse(
+            order.getOrderId(),
+            order.getPenVariant().getPenVariantId(),
+            order.getAddress().getAddressID(),
+            order.getNote(),
+            order.getStatus(),
+            order.getQuantity(),
+            order.getTotalPrice()
+        );
+    }
+
+    @Transactional
+    public OrderResponse acceptOrder(String orderId) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(
+                () -> new AppException(ErrorCode.ORDER_NOT_FOUND)
+            );
+        if (!order.getStatus().equals("Pending"))
+            throw new AppException(ErrorCode.COULD_NOT_ACCEPT_ORDER);
+        order.setStatus("Accepted");
+        order.setUpdatedAt(LocalDateTime.now());
+        try {
+            order = orderRepository.save(order);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.COULD_NOT_ACCEPT_ORDER);
+        }
+        return new OrderResponse(
+            order.getOrderId(),
+            order.getPenVariant().getPenVariantId(),
+            order.getAddress().getAddressID(),
+            order.getNote(),
+            order.getStatus(),
+            order.getQuantity(),
+            order.getTotalPrice()
+        );
+    }
+
+    private List<OrderResponse> parseOrder(List<Order> orders) {
+        List<OrderResponse> orderResponseList = new ArrayList<>();
+        for (Order order : orders) {
+            orderResponseList.add(new OrderResponse(
+                order.getOrderId(),
+                order.getPenVariant().getPenVariantId(),
+                order.getAddress().getAddressID(),
+                order.getNote(),
+                order.getStatus(),
+                order.getQuantity(),
+                order.getTotalPrice()
+            ));
+        }
+        return orderResponseList;
+    }
+
+    public List<OrderResponse> getOrderList(Authentication authentication) {
+        List<Order> orders = orderRepository.findAllByUser_userId(authentication.getName());
+        return parseOrder(orders);
+    }
+
+    public OrderResponse getOrderResponse(String orderId) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(
+                () -> new AppException(ErrorCode.ORDER_NOT_FOUND)
+            );
+        return new OrderResponse(
+            order.getOrderId(),
+            order.getPenVariant().getPenVariantId(),
+            order.getAddress().getAddressID(),
+            order.getNote(),
+            order.getStatus(),
+            order.getQuantity(),
+            order.getTotalPrice()
+        );
+    }
+
+    public List<OrderResponse> adminGetOrderList() {
+        List<Order> orders = orderRepository.findAll();
+        return parseOrder(orders);
+    }
 }
