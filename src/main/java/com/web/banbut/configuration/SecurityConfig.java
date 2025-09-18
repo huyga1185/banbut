@@ -38,7 +38,8 @@ public class SecurityConfig {
                         "/auth/login",
                         "/user/register",
                         "/auth/introspect",
-                        "/auth/{email}",
+                        "/auth/otp/reset-password/{email}",
+                        "/auth/otp/register/{email}",
                         "/auth/{email}/{otp}",
                         "/user/reset-password"
                 ).permitAll()

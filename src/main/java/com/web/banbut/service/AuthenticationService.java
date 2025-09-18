@@ -14,15 +14,10 @@ import com.web.banbut.entity.User;
 import com.web.banbut.exception.AppException;
 import com.web.banbut.exception.ErrorCode;
 import com.web.banbut.repository.UserRepository;
-// import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.mail.MailMessage;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -129,21 +124,46 @@ public class AuthenticationService {
         return OTP.toString();
     }
 
-    public void requestOTP(String email) {
-        userRepository.findByEmail(email)
-            .orElseThrow(
-                () -> new AppException(ErrorCode.USER_NOT_FOUND)
-            );
+    public void requestOTP(String email, int option) {
+        if (option < 0 && option > 2)
+            throw new AppException(ErrorCode.UNKNOWN_ERROR);
+        if (option != 1)
+            userRepository.findByEmail(email)
+                .orElseThrow(
+                    () -> new AppException(ErrorCode.USER_NOT_FOUND)
+                );
         String otp = generateOTP();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a");
         String expireTime = LocalDateTime.now().plusMinutes(5).format(formatter);
-        String html = String.format(
+        String resetPassword = String.format(
             """
                 <h1 style="color:green;">OTP for banbut</h1>
                 <p>Hey customer,</p>
                 <p>Use the One-time Password (OTP): <b>%s</b> to verify and complete your reset password progress.</p>
                 <br>
                 <p>This code will be active till <b>%s</b>. You may request for a new code if you did not enter it within the stipulated timing.</p>
+            """,
+            otp,
+            expireTime
+        );
+        String registerAccount = String.format(
+            """
+                <h1 style="color:green;">OTP for banbut</h1>
+                <p>Hey customer,</p>
+                <p>Use the One-time Password (OTP): <b>%s</b> to verify and complete your register account progress.</p>
+                <br>
+                <p>This code will be active till <b>%s</b>. You may request for a new code if you did not enter it within the stipulated timing.</p>
+            """,
+            otp,
+            expireTime
+        );
+        String confirmOldEmail = String.format(
+            """
+                <h1 style="color:green;">OTP for banbut</h1>
+                <p>Hey customer,</p>
+                <p>Use the One-time Password (OTP): <b>%s</b><p style="color:red;"> to verify and complete your update email progress. If you did not request it, please reset your password <a href="https://example.com/reset-password">here</a></p></p>
+                <br>
+                <p>This code will be active till <b>%s</b>. You may request for a new code if you did not enter it within the stipulated timing.</p>       
             """,
             otp,
             expireTime
@@ -155,9 +175,22 @@ public class AuthenticationService {
             helper.setFrom(sender);
             helper.setTo(email);
             helper.setSubject("OTP for Banbut");
-            helper.setText(html, true);
+            switch(option) {
+                case 0:
+                    helper.setText(resetPassword, true);
+                    break;
+                case 1:
+                    helper.setText(registerAccount, true);
+                    break;
+                case 2:
+                    helper.setText(confirmOldEmail, true);
+                    break;
+                default:
+                    break;
+            }
             javaMailSender.send(mimeMessage);
         } catch (Exception e) {
+            System.out.println("[Error]: In send java mail " + e);
             throw new AppException(ErrorCode.UNKNOWN_ERROR);
         }
     }
@@ -182,7 +215,7 @@ public class AuthenticationService {
         }
     }
 
-    public boolean verifyTemporaryToken(String token) {
+    public boolean verifyTemporaryToken(String token, String email) {
         SecretKey secretKey = new SecretKeySpec(signerKey.getBytes(), "HS512");
         JwtDecoder decoder = NimbusJwtDecoder
             .withSecretKey(secretKey)
@@ -191,7 +224,12 @@ public class AuthenticationService {
         try {
             Jwt jwt =  decoder.decode(token);
             Instant expireTime = jwt.getClaimAsInstant("exp");
-            return !Instant.now().isAfter(expireTime);
+            String subject = jwt.getSubject();
+            if (Instant.now().isBefore(expireTime) && email.equals(subject) && redisTemplate.opsForValue().get("token:" + token) == null) {
+                redisTemplate.opsForValue().set("token:" + token, email, Duration.ofMinutes(5));
+                return true;
+            } else
+                return false;
         } catch (JwtException e) {
             throw new AppException(ErrorCode.TOKEN_INVALID);
         } catch (Exception e) {

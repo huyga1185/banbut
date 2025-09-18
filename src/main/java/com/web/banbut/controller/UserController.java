@@ -26,20 +26,21 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ApiResponse<Map<String, Object>> register(@RequestBody UserCreationRequest userCreationRequest) {
+    public ApiResponse<Map<String, Object>> register(@RequestHeader("X-REQUEST-TOKEN") String token, @RequestBody UserCreationRequest userCreationRequest) {
+        if (!authenticationService.verifyTemporaryToken(token, userCreationRequest.getEmail()))
+            throw new AppException(ErrorCode.TOKEN_INVALID);
         return new ApiResponse<>("success", Map.of( "token",userService.register(userCreationRequest)));
     }
 
     @PostMapping("/reset-password")
     public ApiResponse<Map<String, String>> resetPassword(@RequestHeader("X-REQUEST-TOKEN") String token,  @RequestBody ResetPasswordRequest resetPasswordRequest) {
-        if (!authenticationService.verifyTemporaryToken(token))
+        if (!authenticationService.verifyTemporaryToken(token, resetPasswordRequest.getEmail()))
             throw new AppException(ErrorCode.TOKEN_INVALID);
         userService.resetPassword(resetPasswordRequest);
         return new ApiResponse<Map<String, String>>(
             "success",
             Map.of(
                 "result", "Reset Password Success"
-
             )
         );
     }

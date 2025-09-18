@@ -3,6 +3,8 @@ package com.web.banbut.exception;
 public enum ErrorCode {
     USERNAME_EXISTED(1001, "Username existed"),
     USER_NOT_FOUND(1002,  "User not found"),
+    EMAIL_EXISTED(1003, "Email existed"),
+    COULD_NOT_UPDATE_EMAIL(1004, "Could not update email"),
     PASSWORD_DOES_NOT_MATCH(1003,  "Password does not match"),
     COULD_NOT_RESET_PASSWORD(1004, "could not reset password"),
     PEN_NOT_FOUND(2001, "Pen not found"),

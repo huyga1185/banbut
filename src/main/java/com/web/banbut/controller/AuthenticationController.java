@@ -32,12 +32,18 @@ public class AuthenticationController {
         );
     }
 
-    @PostMapping("/{email}")
-    public ApiResponse<String> requestOtp(@PathVariable String email) {
-        authenticationService.requestOTP(email);
+    @PostMapping("/otp/reset-password/{email}")
+    public ApiResponse<String> requestOTPForResetPassoword(@PathVariable String email) {
+        authenticationService.requestOTP(email, 0);
         return new ApiResponse<String>(
                 "success", null
         );
+    }
+
+    @PostMapping("/otp/register/{email}")
+    public ApiResponse<String> requestOTPForRegister(@PathVariable String email) {
+        authenticationService.requestOTP(email, 1);
+        return new ApiResponse<String>("success", null);
     }
 
     @PostMapping("/{email}/{otp}")
@@ -45,7 +51,7 @@ public class AuthenticationController {
         return  new ApiResponse<>(
                 "success",
                 Map.of(
-                        "result: ", authenticationService.verifyOTP(email, otp)
+                    "result: ", authenticationService.verifyOTP(email, otp)
                 )
         );
     }
