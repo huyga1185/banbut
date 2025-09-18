@@ -1,12 +1,13 @@
 package com.web.banbut.controller;
 
+import com.web.banbut.dto.request.ResetPasswordRequest;
 import com.web.banbut.dto.request.UserCreationRequest;
 import com.web.banbut.dto.response.ApiResponse;
+import com.web.banbut.exception.AppException;
+import com.web.banbut.exception.ErrorCode;
+import com.web.banbut.service.AuthenticationService;
 import com.web.banbut.service.UserService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -14,13 +15,32 @@ import java.util.Map;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final AuthenticationService authenticationService;
 
-    public UserController(UserService userService) {
+    public UserController(
+        UserService userService,
+        AuthenticationService authenticationService
+    ) {
         this.userService = userService;
+        this.authenticationService = authenticationService;
     }
 
     @PostMapping("/register")
     public ApiResponse<Map<String, Object>> register(@RequestBody UserCreationRequest userCreationRequest) {
         return new ApiResponse<>("success", Map.of( "token",userService.register(userCreationRequest)));
+    }
+
+    @PostMapping("/reset-password")
+    public ApiResponse<Map<String, String>> resetPassword(@RequestHeader("X-REQUEST-TOKEN") String token,  @RequestBody ResetPasswordRequest resetPasswordRequest) {
+        if (!authenticationService.verifyTemporaryToken(token))
+            throw new AppException(ErrorCode.TOKEN_INVALID);
+        userService.resetPassword(resetPasswordRequest);
+        return new ApiResponse<Map<String, String>>(
+            "success",
+            Map.of(
+                "result", "Reset Password Success"
+
+            )
+        );
     }
 }

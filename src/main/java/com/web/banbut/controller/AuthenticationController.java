@@ -4,10 +4,7 @@ import com.web.banbut.dto.request.AuthenticationRequest;
 import com.web.banbut.dto.request.IntrospectRequest;
 import com.web.banbut.dto.response.ApiResponse;
 import com.web.banbut.service.AuthenticationService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -31,6 +28,24 @@ public class AuthenticationController {
                 "success",
                 Map.of(
                         "details", authenticationService.introspect(introspectRequest)
+                )
+        );
+    }
+
+    @PostMapping("/{email}")
+    public ApiResponse<String> requestOtp(@PathVariable String email) {
+        authenticationService.requestOTP(email);
+        return new ApiResponse<String>(
+                "success", null
+        );
+    }
+
+    @PostMapping("/{email}/{otp}")
+    public ApiResponse<Map<String, Object>> verifyOtp(@PathVariable String email, @PathVariable String otp) {
+        return  new ApiResponse<>(
+                "success",
+                Map.of(
+                        "result: ", authenticationService.verifyOTP(email, otp)
                 )
         );
     }

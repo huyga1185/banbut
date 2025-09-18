@@ -9,6 +9,7 @@ import com.web.banbut.dto.request.AuthenticationRequest;
 import com.web.banbut.dto.request.IntrospectRequest;
 import com.web.banbut.dto.response.AuthenticationResponse;
 import com.web.banbut.dto.response.IntrospectResponse;
+import com.web.banbut.dto.response.VerifyOTPResponse;
 import com.web.banbut.entity.User;
 import com.web.banbut.exception.AppException;
 import com.web.banbut.exception.ErrorCode;
@@ -25,8 +26,15 @@ import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtException;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.security.SecureRandom;
 import java.text.ParseException;
 import java.time.Duration;
@@ -154,7 +162,52 @@ public class AuthenticationService {
         }
     }
 
-    public void verifyOTP(String email, String otp) {
+    private String generateTemporaryToken(String email) {
+        JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
+        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
+                .subject(email)
+                .issuer("banbut.com")
+                .issueTime(Date.from(Instant.now()))
+                .expirationTime(Date.from(
+                        Instant.now().plus(5, ChronoUnit.MINUTES)
+                ))
+                .build();
+        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
+        JWSObject jwsObject = new JWSObject(jwsHeader, payload);
+        try {
+            jwsObject.sign(new MACSigner(signerKey.getBytes()));
+            return jwsObject.serialize();
+        } catch (JOSEException e) {
+            throw new AppException(ErrorCode.AUTH_TOKEN_SIGN_FAILED);
+        }
+    }
 
+    public boolean verifyTemporaryToken(String token) {
+        SecretKey secretKey = new SecretKeySpec(signerKey.getBytes(), "HS512");
+        JwtDecoder decoder = NimbusJwtDecoder
+            .withSecretKey(secretKey)
+            .macAlgorithm(MacAlgorithm.HS512)
+            .build();
+        try {
+            Jwt jwt =  decoder.decode(token);
+            Instant expireTime = jwt.getClaimAsInstant("exp");
+            return !Instant.now().isAfter(expireTime);
+        } catch (JwtException e) {
+            throw new AppException(ErrorCode.TOKEN_INVALID);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.TOKEN_EXPIRED);
+        }
+    }
+
+    public VerifyOTPResponse verifyOTP(String email, String otp) {
+        String oTP = redisTemplate.opsForValue().get("otp:" + email);
+        if (oTP == null)
+            throw new AppException(ErrorCode.OTP_EXPIRED);
+        if (!oTP.equals(otp))
+            throw new AppException(ErrorCode.OTP_DOES_NOT_MATCH);
+        redisTemplate.delete("otp:" + email);
+        return new VerifyOTPResponse(
+                generateTemporaryToken(email)
+        );
     }
 }

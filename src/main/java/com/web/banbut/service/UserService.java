@@ -1,6 +1,7 @@
 package com.web.banbut.service;
 
 import com.web.banbut.dto.request.AuthenticationRequest;
+import com.web.banbut.dto.request.ResetPasswordRequest;
 import com.web.banbut.dto.request.UserCreationRequest;
 import com.web.banbut.dto.response.AuthenticationResponse;
 import com.web.banbut.entity.User;
@@ -43,13 +44,13 @@ public class UserService {
     }
 
     @Transactional
-    public void resetPassword(String email, String newPassword) {
-        User user = userRepository.findByEmail(email)
+    public void resetPassword(ResetPasswordRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
             .orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND)
             );
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         try {
             userRepository.save(user);
         } catch (Exception e) {

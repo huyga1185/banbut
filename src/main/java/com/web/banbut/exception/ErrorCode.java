@@ -46,7 +46,11 @@ public enum ErrorCode {
     COULD_NOT_VERIFY_TOKEN(4001, "Could not verify token"),
     COULD_NOT_PARSE_TOKEN(4002, "Could not parse token"),
     COULD_NOT_RESET_UPLOAD_FOLDER(9001,"Could not reset upload folder"),
+    OTP_EXPIRED(9002, "OTP expired"),
+    OTP_DOES_NOT_MATCH(9003, "OTP does not match"),
     LACK_OF_REQUEST_BODY(9500, "Lack of request body"),
+    TOKEN_INVALID(9501, "Token invalid"),
+    TOKEN_EXPIRED(9502, "Token expired"),
     UNKNOWN_ERROR(9999, "Unknown error");
     private int code;
 

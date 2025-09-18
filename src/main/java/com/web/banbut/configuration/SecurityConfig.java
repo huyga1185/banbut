@@ -37,7 +37,10 @@ public class SecurityConfig {
                         HttpMethod.POST,
                         "/auth/login",
                         "/user/register",
-                        "/auth/introspect"
+                        "/auth/introspect",
+                        "/auth/{email}",
+                        "/auth/{email}/{otp}",
+                        "/user/reset-password"
                 ).permitAll()
                 .requestMatchers(
                         HttpMethod.GET,
