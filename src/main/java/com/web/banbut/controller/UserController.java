@@ -1,6 +1,7 @@
 package com.web.banbut.controller;
 
 import com.web.banbut.dto.request.ResetPasswordRequest;
+import com.web.banbut.dto.request.UpdateEmailRequest;
 import com.web.banbut.dto.request.UserCreationRequest;
 import com.web.banbut.dto.response.ApiResponse;
 import com.web.banbut.exception.AppException;
@@ -43,5 +44,12 @@ public class UserController {
                 "result", "Reset Password Success"
             )
         );
+    }
+
+    @PostMapping("/update-email")
+    public ApiResponse<Map<String, String>> updateEmail(@RequestHeader("X-REQUEST-TOKEN") String token, @RequestBody UpdateEmailRequest updateEmailRequest) {
+        if (!authenticationService.verifyTemporaryToken(token, updateEmailRequest.getOldEmail()))
+            throw new AppException(ErrorCode.TOKEN_INVALID);
+        return null;
     }
 }

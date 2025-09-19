@@ -7,6 +7,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.web.banbut.dto.request.AuthenticationRequest;
 import com.web.banbut.dto.request.IntrospectRequest;
+import com.web.banbut.dto.request.VerifyOTPRequest;
 import com.web.banbut.dto.response.AuthenticationResponse;
 import com.web.banbut.dto.response.IntrospectResponse;
 import com.web.banbut.dto.response.VerifyOTPResponse;
@@ -125,8 +126,6 @@ public class AuthenticationService {
     }
 
     public void requestOTP(String email, int option) {
-        if (option < 0 && option > 2)
-            throw new AppException(ErrorCode.UNKNOWN_ERROR);
         if (option != 1)
             userRepository.findByEmail(email)
                 .orElseThrow(
@@ -163,7 +162,7 @@ public class AuthenticationService {
                 <p>Hey customer,</p>
                 <p>Use the One-time Password (OTP): <b>%s</b><p style="color:red;"> to verify and complete your update email progress. If you did not request it, please reset your password <a href="https://example.com/reset-password">here</a></p></p>
                 <br>
-                <p>This code will be active till <b>%s</b>. You may request for a new code if you did not enter it within the stipulated timing.</p>       
+                <p>This code will be active till <b>%s</b>. You may request for a new code if you did not enter it within the stipulated timing.</p>
             """,
             otp,
             expireTime
@@ -186,7 +185,7 @@ public class AuthenticationService {
                     helper.setText(confirmOldEmail, true);
                     break;
                 default:
-                    break;
+                    throw new AppException(ErrorCode.UNKNOWN_ERROR);
             }
             javaMailSender.send(mimeMessage);
         } catch (Exception e) {
@@ -225,8 +224,8 @@ public class AuthenticationService {
             Jwt jwt =  decoder.decode(token);
             Instant expireTime = jwt.getClaimAsInstant("exp");
             String subject = jwt.getSubject();
-            if (Instant.now().isBefore(expireTime) && email.equals(subject) && redisTemplate.opsForValue().get("token:" + token) == null) {
-                redisTemplate.opsForValue().set("token:" + token, email, Duration.ofMinutes(5));
+            if (Instant.now().isBefore(expireTime) && email.equals(subject) && redisTemplate.opsForValue().get("used_token:" + token) == null) {
+                redisTemplate.opsForValue().set("used_token:" + token, email, Duration.ofMinutes(5));
                 return true;
             } else
                 return false;
@@ -237,15 +236,15 @@ public class AuthenticationService {
         }
     }
 
-    public VerifyOTPResponse verifyOTP(String email, String otp) {
-        String oTP = redisTemplate.opsForValue().get("otp:" + email);
+    public VerifyOTPResponse verifyOTP(VerifyOTPRequest request) {
+        String oTP = redisTemplate.opsForValue().get("otp:" + request.getEmail());
         if (oTP == null)
             throw new AppException(ErrorCode.OTP_EXPIRED);
-        if (!oTP.equals(otp))
+        if (!oTP.equals(request.getOtp()))
             throw new AppException(ErrorCode.OTP_DOES_NOT_MATCH);
-        redisTemplate.delete("otp:" + email);
+        redisTemplate.delete("otp:" + request.getEmail());
         return new VerifyOTPResponse(
-                generateTemporaryToken(email)
+            generateTemporaryToken(request.getEmail())
         );
     }
 }

@@ -60,11 +60,14 @@ public class PenController {
     }
 
     @GetMapping("/get-list-preview")
-    public ApiResponse<Map<String, Object>> getListPreview() {
+    public ApiResponse<Map<String, Object>> getListPreview(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
+    ) {
         return new ApiResponse<>(
                 "success",
                 Map.of(
-                        "pen", penService.getListPenPreview()
+                    "pens: ", penService.getListPenPreview(page, size)
                 )
         );
     }
@@ -75,7 +78,7 @@ public class PenController {
         return new ApiResponse<>(
                 "success",
                 Map.of(
-                        "pen", penService.adminGetListPen()
+                        "pen: ", penService.adminGetListPen()
                 )
         );
     }

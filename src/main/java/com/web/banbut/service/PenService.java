@@ -11,6 +11,10 @@ import com.web.banbut.repository.BrandRepository;
 import com.web.banbut.repository.CategoryRepository;
 import com.web.banbut.repository.PenRepository;
 import com.web.banbut.repository.PenVariantRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -122,10 +126,10 @@ public class PenService {
         );
     }
 
-    public List<PenPreviewResponse> getListPenPreview() {
-        List<Pen> pens = penRepository.findAll();
+    public Page<PenPreviewResponse> getListPenPreview(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Pen> pens = penRepository.findAll(pageable);
         List<PenPreviewResponse> penPreviewResponses = new ArrayList<>();
-
         if (!pens.isEmpty()) {
             for (Pen pen : pens) {
                 if (!pen.isVisible())
@@ -156,7 +160,7 @@ public class PenService {
                 ));
             }
         }
-        return penPreviewResponses;
+        return new PageImpl<PenPreviewResponse>(penPreviewResponses, pageable, pens.getTotalElements());
     }
     
     //admin

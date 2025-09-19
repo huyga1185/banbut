@@ -38,10 +38,12 @@ public class SecurityConfig {
                         "/auth/login",
                         "/user/register",
                         "/auth/introspect",
-                        "/auth/otp/reset-password/{email}",
-                        "/auth/otp/register/{email}",
-                        "/auth/{email}/{otp}",
-                        "/user/reset-password"
+                        "/auth/otp/reset-password",
+                        "/auth/otp/register",
+                        "/auth/otp/verify",
+                        "/user/reset-password",
+                        "/auth/otp/update-email/new",
+                        "/auth/otp/update-email/old"
                 ).permitAll()
                 .requestMatchers(
                         HttpMethod.GET,
